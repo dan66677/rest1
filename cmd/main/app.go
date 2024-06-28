@@ -1,20 +1,22 @@
 package main
 
 import (
-	"log"
 	"net"
 	"net/http"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+
 	"main.go/internal/handlers/user"
+	"main.go/pkg/logging"
 )
 
 func main() {
-	log.Println("create router")
+	logger := logging.GetLogger()
+	logger.Info("create router")
 	router := httprouter.New()
 
-	log.Println("handler")
+	logger.Info("register handler")
 	handler := user.NewHandler()
 	handler.Register(router)
 
@@ -22,7 +24,8 @@ func main() {
 }
 
 func start(router *httprouter.Router) {
-	log.Println("start application")
+	logger := logging.GetLogger()
+	logger.Info("start application")
 	listener, err := net.Listen("tcp", ":1234")
 	if err != nil {
 		panic(err)
@@ -34,5 +37,6 @@ func start(router *httprouter.Router) {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	log.Fatalln(server.Serve(listener))
+	logger.Info("serve")
+	logger.Fatal(server.Serve(listener))
 }
