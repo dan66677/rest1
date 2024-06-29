@@ -5,6 +5,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"main.go/internal/handlers"
+	"main.go/pkg/logging"
 )
 
 const (
@@ -13,10 +14,13 @@ const (
 )
 
 type handler struct {
+	logger *logging.Logger
 }
 
-func NewHandler() handlers.Handler {
-	return &handler{}
+func NewHandler(logger *logging.Logger) handlers.Handler {
+	return &handler{
+		logger: logger,
+	}
 }
 
 func (h *handler) Register(router *httprouter.Router) {
